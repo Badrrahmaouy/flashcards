@@ -35,7 +35,7 @@ export default function cards(state = initialState, action) {
     case DELETE_DECK:
       const { allDecks } = state
       const { deckId } = action
-      const deckFiltered = allDecks.filter(deck => deckId !== deck.id)
+      const deckFiltered = Object.keys(allDecks).filter(deck => deckId !== deck)
 
       return {
         ...state,
@@ -46,8 +46,7 @@ export default function cards(state = initialState, action) {
     case INITIAL_DATA:
       return {
         ...state,
-        ...action,
-        'loading': false
+        ...action
       }
     default:
       return state

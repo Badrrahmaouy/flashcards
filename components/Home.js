@@ -8,7 +8,6 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 
-// IF I ACCESS THIS.PROPS
 class Home extends Component {
   render() {
     const Decks = this.props.allDecks
@@ -20,18 +19,16 @@ class Home extends Component {
         </Text>
         <ScrollView
           contentContainerStyle={styles.contentContainer}
-          // style={styles.ScrollView}
         >
           {Decks
-            ? Object.keys(Decks).map((deck) => {
-              return (
+            ? Object.keys(Decks).map((deck) => (
                 <View key={Decks[deck].deckId}>
                   <TouchableOpacity
-                    // onPress={() =>
-                    //   this.props.navigation.navigate('deckDetails', {
-                    //     deck: Decks[K],
-                    //   })
-                    // }
+                    onPress={() =>
+                      this.props.navigation.navigate('deckDetails', {
+                        deck: Decks[deck],
+                      })
+                    }
                     style={styles.deck}
                   >
                     <Text
@@ -48,9 +45,8 @@ class Home extends Component {
                     </Text>
                   </TouchableOpacity>
                 </View>
-              )
-            })
-            : null}
+            )) : null
+          }
         </ScrollView>
       </View>
     )
@@ -84,21 +80,17 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state, props) {
   const { allDecks } = state
-//   if (!props.route.params) {
-//     return {
-//       allDecks,
-//     }
-//   } else {
-//     const { deckId, deleteDeck } = props.route.params
-//     return {
-//       allDecks,
-//       deckId,
-//       deleteDeck,
-//     }
-//   }
-// }
-  return {
-    allDecks
+  if (!props.route.params) {
+    return {
+      allDecks,
+    }
+  } else {
+    const { deckId } = props.route.params
+    
+    return {
+      allDecks,
+      deckId,
+    }
   }
 }
 

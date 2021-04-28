@@ -1,5 +1,3 @@
-
-
 export const FLASH_STORAGE_KEY = 'FLASHCARD:key'
 
 export function getRandomIntNum(max) {

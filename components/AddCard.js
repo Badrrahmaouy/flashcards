@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import {
   StyleSheet,
   Text,
-  TouchableOpacity,
   Switch,
   View,
   Platform,
@@ -10,33 +9,9 @@ import {
   TextInput,
 } from 'react-native'
 import { connect } from 'react-redux'
-import { addCard } from '../actions/index'
-import { FontAwesome } from '@expo/vector-icons'
-import { black, darkPurple, gray, lightPurple, white } from '../utils/colors'
-
-function SubmitBtn({ onPress, disab }) {
-  return (
-    <TouchableOpacity
-      onPress={onPress}
-      disabled={disab}
-      style={
-        disab === true
-          ? [styles.submitBtn, styles.submitBtnDisabled]
-          : styles.submitBtn
-      }
-    >
-      <Text
-        style={
-          disab === true
-            ? [styles.submitTxt, styles.submitTxtDisabled]
-            : styles.submitTxt
-        }
-      >
-        Submit
-      </Text>
-    </TouchableOpacity>
-  )
-}
+import { handleAddCard } from '../actions/index'
+import GoBack from './GoBack'
+import SubmitBtn from './SubmitBtn'
 
 class AddCard extends Component {
   state = {
@@ -76,19 +51,12 @@ class AddCard extends Component {
 
   render() {
     const { question } = this.state
-    let disabled = question.includes('')
-
+    let disabled = question === ''
     const isEnabled = this.state.answer
 
     return (
       <KeyboardAvoidingView style={{ flex: 1 }} behavior='heigth'>
-        <TouchableOpacity
-          style={styles.backBtn}
-          // onPress={() => this.props.navigation.goBack()}
-        >
-          <FontAwesome name='arrow-left' size={30} />
-        </TouchableOpacity>
-
+        <GoBack onPress={() => this.props.navigation.goBack()} />
         <Text
           style={styles.pageTitle}
         >
@@ -171,28 +139,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: '#ededed',
   },
-  submitBtn: {
-    padding: 10,
-    borderWidth: 1,
-    borderColor: black,
-    backgroundColor: darkPurple,
-    borderRadius: 5,
-    width: 92,
-    alignSelf: 'flex-start',
-    textAlign: 'center',
-    borderWidth: 1,
-    borderColor: black,
-  },
-  submitBtnDisabled: {
-    backgroundColor: lightPurple,
-  },
-
-  submitTxt: {
-    color: white,
-  },
-  submitTxtDisabled: {
-    color: gray,
-  },
   submit: {
     bottom: 260
   },
@@ -230,17 +176,17 @@ const styles = StyleSheet.create({
   }
 })
 
-// const mapStateToProps = (state, props) => {
-//   const { deckId } = props.route.params
+const mapStateToProps = (state, props) => {
+  const { deckId } = props.route.params
 
-//   return {
-//     deckId,
-//   }
-// }
+  return {
+    deckId
+  }
+}
 
 const mapDispatchToProps = (dispatch) => ({
-  addNewCard: (deckId, newCard) => dispatch(addCard(deckId, newCard)),
+  addNewCard: (deckId, newCard) => dispatch(handleAddCard(deckId, newCard)),
   initialData: () => dispatch(handleInitialData()),
 })
 
-export default connect(null, mapDispatchToProps)(AddCard)
+export default connect(mapStateToProps, mapDispatchToProps)(AddCard)

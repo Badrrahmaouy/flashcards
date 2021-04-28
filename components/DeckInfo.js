@@ -1,21 +1,16 @@
 import React, { Component } from 'react'
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
-import { FontAwesome } from '@expo/vector-icons'
-// import { deleteDeck } from '../actions/index'
-import { lightPurple, white, black, darkPurple } from '../utils/colors'
+import { lightPurple, white, black, darkPurple, red } from '../utils/colors'
+import GoBack from './GoBack'
 
 class DeckInfo extends Component {
   render() {
-    // const { deckId, deckTitle, deckCards } = this.props
+    const { deckId, deckTitle, deckCards } = this.props
+
     return (
       <View style={{ flex: 1 }}>
-        <TouchableOpacity
-          style={styles.backBtn}
-          // onPress={() => this.props.navigation.goBack()}
-        >
-          <FontAwesome name='arrow-left' size={30} />
-        </TouchableOpacity>
+        <GoBack onPress={() => this.props.navigation.goBack()} />
         <View style={{ flex: 1 }}>
           <View style={styles.container}>
             <Text style={styles.pageTitle}>{deckTitle} </Text>
@@ -33,9 +28,9 @@ class DeckInfo extends Component {
             <View style={{ alignItems: 'center' }}>
               <TouchableOpacity
                 disabled={!deckCards.length > 0}
-                // onPress={() =>
-                //   this.props.navigation.navigate('quiz', { deckId: deckId })
-                // }
+                onPress={() =>
+                  this.props.navigation.navigate('quiz', { deckId: deckId })
+                }
                 style={
                   !deckCards.length > 0
                     ? [styles.navBtn, styles.navDisabled]
@@ -48,9 +43,9 @@ class DeckInfo extends Component {
               </TouchableOpacity>
 
               <TouchableOpacity
-                // onPress={() =>
-                //   this.props.navigation.navigate('addcard', { deckId: deckId })
-                // }
+                onPress={() =>
+                  this.props.navigation.navigate('addcard', { deckId: deckId })
+                }
                 style={styles.navBtn}
               >
                 <Text style={{ textAlign: 'center', color: white }}>
@@ -69,20 +64,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  // contentContainer: {
-  //   flex: 1,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  // },
-  // deck: {
-  //   textAlign: 'center',
-  //   shadowColor: 'rgba(0,0,0,0.24)',
-  //   padding: 20,
-  //   width: 200,
-  //   marginBottom: 15,
-  //   borderWidth: 1,
-  //   borderColor: '#000',
-  // },
   pageTitle: {
     textAlign: 'center',
     marginTop: 50,
@@ -113,27 +94,20 @@ const styles = StyleSheet.create({
   },
 })
 
-// const mapStateToProps = (state, props) => {
-//   // const { d } = props.route.params
-//   const { cards } = state.allDecks[deck.deckId]
+const mapStateToProps = (state, props) => {
+  const { deck } = props.route.params
+  const { cards } = state.allDecks[deck.deckId]
 
-//   if (deck && cards) {
-//     return {
-//       deck: deck,
-//       deckTitle: deck.deckTitle,
-//       deckCards: cards,
-//       deckId: deck.deckId,
-//       decksLoaded: true,
-//     }
-//   } else {
-//     return {
-//       decksLoaded: false,
-//     }
-//   }
-// }
+  if (deck && cards) {
+    return {
+      deck: deck,
+      deckTitle: deck.deckTitle,
+      deckCards: cards,
+      deckId: deck.deckId,
+    }
+  } else {
+    console.log("There's an error showing this deck.")
+  }
+}
 
-// const mapDispatchToProps = (dispatch) => ({
-//   deleteThisDeck: (deck) => dispatch(deleteDeck(deck)),
-// })
-
-export default connect()(DeckInfo)
+export default connect(mapStateToProps)(DeckInfo)

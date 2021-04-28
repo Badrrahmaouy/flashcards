@@ -8,15 +8,15 @@ import {
   KeyboardAvoidingView,
 } from 'react-native'
 import { connect } from 'react-redux'
-import { FontAwesome } from '@expo/vector-icons'
 import { red, lightRed, lightGreen, darkGray } from '../utils/colors'
+import GoBack from './GoBack'
 
 // here you can change the default texts for Quiz page
 const showAnswer = 'Show Answer'
 const hideAnswer = 'Hide Answer'
 const Correct = 'Correct'
 const Incorrect = 'Incorrect'
-const GoBack = 'Go Back'
+const Back = 'Go Back'
 const mRestart = 'Restart'
 
 function QuizzBtn({ onPress, Texto, style }) {
@@ -46,9 +46,9 @@ class Quiz extends Component {
         return this.setState({ showAnswer: false })
         break
       default:
-        // const { deckCards } = this.props
+        const { deckCards } = this.props
         const { count } = this.state
-        // const savedAnswer = deckCards[count].answer
+        const savedAnswer = deckCards[count].answer
         const userAnswer = savedAnswer === answer
         return this.handleQuiz(userAnswer)
     }
@@ -72,22 +72,17 @@ class Quiz extends Component {
 
   //Quiz Render
   quizRender = () => {
-    // const { deckCards } = this.props
+    const { deckCards } = this.props
     const { count } = this.state
 
     return (
       <View>
         <Text
-          style={{
-            textAlign: 'center',
-            fontSize: 18,
-            color: darkGray,
-            marginTop: 39,
-          }}
+          style={styles.counter}
         >
           ({count + 1} / {deckCards.length})
         </Text>
-        <Text style={styles.Question}>{deckCards[count].question}</Text>
+        <Text style={styles.question}>{deckCards[count].question}</Text>
         {this.state.showAnswer
           ? deckCards[count].answer
             ? this.showCorrectAnswer()
@@ -110,12 +105,12 @@ class Quiz extends Component {
         <View style={{ flexDirection: 'row', marginTop: 15 }}>
           <QuizzBtn
             Texto={Correct}
-            style={styles.Correct}
+            style={styles.correct}
             onPress={() => this.handleAnswer(true)}
           />
           <QuizzBtn
             Texto={Incorrect}
-            style={styles.Incorrect}
+            style={styles.incorrect}
             onPress={() => this.handleAnswer(false)}
           />
         </View>
@@ -127,22 +122,15 @@ class Quiz extends Component {
     const { count, totalCorrect } = this.state
     return (
       <View>
-        <Text style={[styles.Question, { marginTop: 65 }]}>The End!</Text>
+        <Text style={[styles.question, { marginTop: 65 }]}>The End!</Text>
         <View
-          style={{
-            borderWidth: 1,
-            borderColor: darkGray,
-            padding: 8,
-            borderRadius: 2,
-            borderStyle: 'dashed',
-            marginTop: 10,
-          }}
+          style={styles.dashboard}
         >
           <Text styles={{ fontSize: 19 }}>You answered correctly: </Text>
           <Text style={{ textAlign: 'center', fontSize: 19 }}>
             {' '}
-            <Text style={styles.ResultNum}>{totalCorrect}</Text> out of{' '}
-            <Text style={styles.ResultNum}>{count}</Text>
+            <Text style={styles.resultNum}>{totalCorrect}</Text> out of{' '}
+            <Text style={styles.resultNum}>{count}</Text>
           </Text>
         </View>
         <View style={{ marginTop: 15 }}>
@@ -152,9 +140,9 @@ class Quiz extends Component {
             onPress={() => this.handleAnswer(mRestart)}
           />
           <QuizzBtn
-            Texto={GoBack}
-            style={styles.GoBack}
-            // onPress={() => this.props.navigation.goBack()}
+            Texto={Back}
+            style={styles.goBack}
+            onPress={() => this.props.navigation.goBack()}
           />
         </View>
       </View>
@@ -163,7 +151,7 @@ class Quiz extends Component {
 
   // React Component Class Quiz Render here:
   render() {
-    // const { deckId, deckTitle, deckCards, deck } = this.props
+    const { deckId, deckTitle, deckCards, deck } = this.props
     const { QuizProcessing, quizNum } = this.state
     return (
       <KeyboardAvoidingView
@@ -171,12 +159,7 @@ class Quiz extends Component {
         behavior={Platform === 'ios' ? 'padding' : 'height'}
       >
         <View style={styles.container}>
-          <TouchableOpacity
-            style={styles.BackBtn}
-            // onPress={() => this.props.navigation.goBack()}
-          >
-            <FontAwesome name='arrow-left' size={30} />
-          </TouchableOpacity>
+          <GoBack onPress={() => this.props.navigation.goBack()} />
 
           <View style={{ justifyContent: 'center', flexDirection: 'row' }}>
             {this.state.count < deckCards.length
@@ -190,10 +173,16 @@ class Quiz extends Component {
 }
 
 const styles = StyleSheet.create({
+  counter: {
+    textAlign: 'center',
+    fontSize: 18,
+    color: darkGray,
+    marginTop: 39,
+  },
   container: {
     flex: 1,
   },
-  BackBtn: {
+  backBtn: {
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     backgroundColor: '#FFF',
@@ -201,7 +190,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     paddingLeft: 15,
   },
-  Question: {
+  question: {
     textAlign: 'center',
     marginTop: 6,
     fontSize: 32,
@@ -229,7 +218,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 4,
   },
-  Correct: {
+  correct: {
     color: lightGreen,
     fontSize: 30,
     borderWidth: 1,
@@ -241,7 +230,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     marginRight: 8,
   },
-  Incorrect: {
+  incorrect: {
     color: lightRed,
     fontSize: 30,
     borderWidth: 1,
@@ -255,13 +244,22 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     marginLeft: 8,
   },
-  GoBack: {
+  dashboard: {
+    borderWidth: 1,
+    borderColor: darkGray,
+    padding: 8,
+    borderRadius: 2,
+    borderStyle: 'dashed',
+    marginTop: 10,
+  },
+  goBack: {
     color: red,
     fontSize: 30,
     marginTop: 30,
     borderWidth: 1,
-    width: 130,
     textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: 4,
     padding: 3,
   },
@@ -271,22 +269,22 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textDecorationLine: 'underline',
   },
-  ResultNum: {
+  resultNum: {
     fontSize: 21,
     fontWeight: 'bold',
   },
 })
 
-// function mapStateToProps(state, props) {
-//   const { deckId } = props.route.params
-//   const deck = state.allDecks[deckId]
+function mapStateToProps(state, props) {
+  const { deckId } = props.route.params
+  const deck = state.allDecks[deckId]
 
-//   return {
-//     deck: deck,
-//     deckTitle: deck.deckTitle,
-//     deckCards: deck.cards,
-//     deckId: deckId,
-//   }
-// }
+  return {
+    deck: deck,
+    deckTitle: deck.deckTitle,
+    deckCards: deck.cards,
+    deckId: deckId,
+  }
+}
 
-export default connect()(Quiz)
+export default connect(mapStateToProps)(Quiz)

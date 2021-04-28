@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import {
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
   KeyboardAvoidingView,
   TextInput,
@@ -10,33 +9,8 @@ import {
 import { getRandomIntNum } from '../utils/helpers'
 import { connect } from 'react-redux'
 import { handleAddDeck, handleInitialData } from '../actions/index'
-import { black, darkPurple, lightPurple, white, gray } from '../utils/colors'
-import { FontAwesome } from '@expo/vector-icons'
-import { addDeck } from '../utils/api'
-
-function SubmitBtn({ onPress, disab }) {
-  return (
-    <TouchableOpacity
-      onPress={onPress}
-      disabled={disab}
-      style={
-        disab === true
-          ? [styles.submitBtn, styles.submitBtnDisabled]
-          : styles.submitBtn
-      }
-    >
-      <Text
-        style={
-          disab === true
-            ? [styles.submitTxt, styles.submitTxtDisabled]
-            : styles.submitTxt
-        }
-      >
-        Add Deck
-      </Text>
-    </TouchableOpacity>
-  )
-}
+import GoBack from './GoBack'
+import SubmitBtn from './SubmitBtn'
 
 class AddDeck extends Component {
   state = {
@@ -60,8 +34,7 @@ class AddDeck extends Component {
   handleSubmit = () => {
     const deckId = this.state.deck.deckTitle + getRandomIntNum()
 
-    this.setState(
-      (state) => ({
+    this.setState((state) => ({
         deck: {
           ...state.deck,
           deckId,
@@ -70,25 +43,32 @@ class AddDeck extends Component {
       () => {
         const newDeck = { ...this.state.deck }
         this.props.addNewDeck(newDeck)
+        this.reset()
         this.props.navigation.goBack()
       }
     )
 
     //update LocalStorage
-    addDeck(this.state.deck)
+    addDeck(newDeck)
   }
 
+  reset = () => (
+    this.setState((state) => ({
+      ...state,
+      deck: {
+        ...state.deck,
+        deckId: '',
+        deckTitle: ''
+      }
+    }))
+  )
+
   render() {
-    const { deckTitle } = this.state
+    const { deckTitle } = this.state.deck
 
     return (
       <KeyboardAvoidingView style={{ flex: 1 }} behavior='heigth'>
-        <TouchableOpacity
-          style={styles.backBtn}
-          onPress={() => this.props.navigation.goBack()}
-        >
-          <FontAwesome name='arrow-left' size={30} />
-        </TouchableOpacity>
+        <GoBack onPress={() => this.props.navigation.goBack()} />
         <View style={{ flex: 1 }}>
           <Text
             style={styles.title}
@@ -125,38 +105,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: '#ededed',
     alignSelf: 'center',
-  },
-  submitBtn: {
-    padding: 10,
-    marginTop: 10,
-    borderWidth: 1,
-    borderColor: black,
-    backgroundColor: darkPurple,
-    borderRadius: 5,
-    width: 92,
-    alignSelf: 'center',
-    textAlign: 'center',
-    borderWidth: 1,
-    borderColor: black,
-  },
-  submitBtnDisabled: {
-    backgroundColor: lightPurple,
-  },
-
-  submitTxt: {
-    color: white,
-  },
-  submitTxtDisabled: {
-    color: gray,
-  },
-
-  backBtn: {
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    backgroundColor: '#FFF',
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingLeft: 15,
   },
   title: {
     textAlign: 'center',
