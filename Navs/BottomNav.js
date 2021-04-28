@@ -1,11 +1,9 @@
 import React from 'react'
-// import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { NavigationContainer } from '@react-navigation/native'
 import Home from '../components/Home'
 import AddDeck from '../components/AddDeck'
 import { Feather } from '@expo/vector-icons'
-import { darkPurple, white, lightPurple, black } from '../utils/colors'
+import { darkPurple, white, lightPurple } from '../utils/colors'
 
 const Tab = createBottomTabNavigator()
 
