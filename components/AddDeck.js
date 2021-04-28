@@ -68,7 +68,7 @@ class AddDeck extends Component {
     const { deckTitle } = this.state.deck
 
     return (
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior='heigth'>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior='padding'>
         <GoBack onPress={() => this.props.navigation.goBack()} />
         <View style={{ flex: 1 }}>
           <Text

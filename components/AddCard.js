@@ -55,7 +55,7 @@ class AddCard extends Component {
     const isEnabled = this.state.answer
 
     return (
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior='heigth'>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior='padding'>
         <GoBack onPress={() => this.props.navigation.goBack()} />
         <Text
           style={styles.pageTitle}
