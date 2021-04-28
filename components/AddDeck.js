@@ -11,6 +11,7 @@ import { connect } from 'react-redux'
 import { handleAddDeck, handleInitialData } from '../actions/index'
 import GoBack from './GoBack'
 import SubmitBtn from './SubmitBtn'
+import { addDeck } from '../utils/api'
 
 class AddDeck extends Component {
   state = {
